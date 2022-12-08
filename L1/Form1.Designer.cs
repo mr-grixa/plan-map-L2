@@ -60,6 +60,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label_Y = new System.Windows.Forms.Label();
             this.pictureBox_map = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_control)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.up_T)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.up_B)).BeginInit();
@@ -375,6 +376,11 @@
             this.pictureBox_map.TabIndex = 54;
             this.pictureBox_map.TabStop = false;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 42000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -457,6 +463,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label_Y;
         private System.Windows.Forms.PictureBox pictureBox_map;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

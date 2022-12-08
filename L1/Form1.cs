@@ -269,31 +269,8 @@ namespace L1
 
         public void Trigger()
         {
-            int rast = (Math.Abs(Convert.ToInt32(Rdata.le) - Rstart) + Math.Abs(Convert.ToInt32(Rdata.le) - Lstart)) / 2;
-            label5.Text = rast.ToString();
-            if (rast > 4534)
-            {
-                if (Rmess.B != 30)
-                {
-                    Rmess.B=30;
-                }
-                else
-                {
-                    Rmess.B=-30;
-                }
-                Rstart = Convert.ToInt32(Rdata.le);
-                Lstart = Convert.ToInt32(Rdata.le);
-                Rmess.N++;
-                SendUDPMessage();
-            }
 
         }
-        //    //int le = 3734;
-        //    //int re = 5335;
-        //    //100 30 
-
-        int Rstart=0;
-        int Lstart = 0;
 
         void map()
         {
@@ -309,15 +286,44 @@ namespace L1
             pictureBox_map.Image=bitmap;
             //pictureBox_map.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
         }
+        int shag = 0;
         private void checkBox_AI_CheckedChanged(object sender, EventArgs e)
         {
-            Rstart = Convert.ToInt32(Rdata.le);
-            Lstart = Convert.ToInt32(Rdata.le);
-            Rmess.B = -30;
-            Rmess.F = 100;
-            Rmess.N++;
-            SendUDPMessage();
-        } 
+            if (checkBox_AI.Checked)
+            {
+                Rmess.B = 30;
+                Rmess.F = 100;
+                Rmess.N++;
+                SendUDPMessage();
+                timer1.Start();
+                shag = 0;
+            }
+            else
+            {
+                timer1.Stop();
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            switch (shag)
+            {
+                case 0:
+                    shag = 1;
+                    Rmess.B = -30;
+                    Rmess.F = 100;
+                    Rmess.N++;
+                    SendUDPMessage();
+                    break;
+                case 1:
+                    Rmess.B = 0;
+                    Rmess.F = 0;
+                    Rmess.N++;
+                    SendUDPMessage();
+                    break;
+            }
+        }
+
         private void up_N_ValueChanged(object sender, EventArgs e)
         {
             Rmess.N = (int)up_N.Value;
@@ -342,5 +348,6 @@ namespace L1
         {
             Rmess.T = (int)up_T.Value;
         }
+
     }
 }
