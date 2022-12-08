@@ -1,30 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Xml.Linq;
-using System.Runtime.InteropServices;
-using System.Globalization;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace L1
 {
@@ -40,7 +22,7 @@ namespace L1
         Bitmap bitmap;
         private void Form1_Load(object sender, EventArgs e)
         {
-            bitmap=new Bitmap(pictureBox_map.Size.Width, pictureBox_map.Size.Height);
+            bitmap = new Bitmap(pictureBox_map.Size.Width, pictureBox_map.Size.Height);
         }
         private void ShowUDPMessageMethod(string message)
         {
@@ -162,7 +144,7 @@ namespace L1
                     string errmessage = "RemoteHost lost";
                     this.Invoke(new MethodInvoker(() =>
                     {
-                            PrintLog(errmessage);
+                        PrintLog(errmessage);
                     }));
                 }
             }
@@ -193,7 +175,7 @@ namespace L1
             }
         }
         private void SendUDPMessageButton_Click(object sender, EventArgs e)
-        {       
+        {
             SendUDPMessage();
             if (checkBox_N.Checked)
             {
@@ -228,7 +210,7 @@ namespace L1
             }
             else if (e.X > 70)
             {
-                Rmess.B = 70 -e.X;
+                Rmess.B = 70 - e.X;
             }
             else { Rmess.B = 0; }
             if (e.Y < 50)
@@ -266,9 +248,74 @@ namespace L1
             up_T.Value = Rmess.T;
             up_N.Value = Rmess.N;
         }
-
+        int mode = 0;
         public void Trigger()
         {
+            switch (mode)
+            {
+                case 0:
+                    Rmess.B = -50;
+                    Rmess.N++;
+                    SendUDPMessage();
+                    mode = 1;
+                    break;
+                case 1:
+                    if (Convert.ToInt16(Rdata.d2) < 25)
+                    {
+                        Rmess.B = 0;
+                        Rmess.N++;
+                        SendUDPMessage();
+                        mode = 2;
+                    }
+                    break;
+                case 2:
+                    if (Convert.ToInt16(Rdata.d0) > 10)
+                    {
+                        if (Convert.ToInt16(Rdata.d2) < 20)
+                        {
+                            Rmess.B = 20;
+                            if (Convert.ToInt16(Rdata.d1) < 40)
+                            {
+                                Rmess.F = 0;
+                            }
+                            else
+                            {
+                                Rmess.F = 100;
+                            }
+                            Rmess.N++;
+                            SendUDPMessage();
+                        }
+                        else if (Convert.ToInt16(Rdata.d2) > 30)
+                        {
+                            Rmess.B = -20;
+                            if (Convert.ToInt16(Rdata.d1) > 60)
+                            {
+                                Rmess.F = 0;
+                            }
+                            else
+                            {
+                                Rmess.F = 100;
+                            }
+                            Rmess.N++;
+                            SendUDPMessage();
+                        }
+                        else
+                        {
+                            Rmess.B = 0;
+                            Rmess.F = 100;
+                            Rmess.N++;
+                            SendUDPMessage();
+                        }
+                    }
+                    else
+                    {
+                        Rmess.B = -30;
+                        Rmess.F = 0;
+                        Rmess.N++;
+                        SendUDPMessage();
+                    }
+                    break;
+            }
 
         }
 
@@ -278,25 +325,25 @@ namespace L1
             Graphics g = Graphics.FromImage(bitmap);
             double dx = Convert.ToDouble(Rdata.x, NumberFormatInfo.InvariantInfo);
             double dy = Convert.ToDouble(Rdata.y, NumberFormatInfo.InvariantInfo);
-            int x = Convert.ToInt32(dx* mnozetel);
+            int x = Convert.ToInt32(dx * mnozetel);
             int y = Convert.ToInt32(dy * mnozetel);
-            g.FillRectangle(Brushes.Red, x,pictureBox_map.Size.Height -y, 1, 1);
+            g.FillRectangle(Brushes.Red, x, pictureBox_map.Size.Height - y, 1, 1);
             label_X.Text = x.ToString();
             label_Y.Text = y.ToString();
-            pictureBox_map.Image=bitmap;
+            pictureBox_map.Image = bitmap;
         }
 
-        //private void checkBox_AI_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (checkBox_AI.Checked)
-        //    {
+        private void checkBox_AI_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_AI.Checked)
+            {
+                Trigger();
+            }
+            //    else
+            //    {
 
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
+            //    }
+        }
 
 
         private void up_N_ValueChanged(object sender, EventArgs e)
