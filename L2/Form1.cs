@@ -284,45 +284,20 @@ namespace L1
             label_X.Text = x.ToString();
             label_Y.Text = y.ToString();
             pictureBox_map.Image=bitmap;
-            //pictureBox_map.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
-        }
-        int shag = 0;
-        private void checkBox_AI_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox_AI.Checked)
-            {
-                Rmess.B = 30;
-                Rmess.F = 100;
-                Rmess.N++;
-                SendUDPMessage();
-                timer1.Start();
-                shag = 0;
-            }
-            else
-            {
-                timer1.Stop();
-            }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            switch (shag)
-            {
-                case 0:
-                    shag = 1;
-                    Rmess.B = -30;
-                    Rmess.F = 100;
-                    Rmess.N++;
-                    SendUDPMessage();
-                    break;
-                case 1:
-                    Rmess.B = 0;
-                    Rmess.F = 0;
-                    Rmess.N++;
-                    SendUDPMessage();
-                    break;
-            }
-        }
+        //private void checkBox_AI_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (checkBox_AI.Checked)
+        //    {
+
+        //    }
+        //    else
+        //    {
+
+        //    }
+        //}
+
 
         private void up_N_ValueChanged(object sender, EventArgs e)
         {
