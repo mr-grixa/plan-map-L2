@@ -269,7 +269,7 @@ namespace L1
                     }
                     break;
                 case 2:
-                    if (Convert.ToInt16(Rdata.d0) > 10)
+                    if (Convert.ToInt16(Rdata.d0) > 30 && Rdata.b=="0")
                     {
                         if (Convert.ToInt16(Rdata.d2) < 20)
                         {
@@ -309,14 +309,13 @@ namespace L1
                     }
                     else
                     {
-                        Rmess.B = -30;
+                        Rmess.B = 30;
                         Rmess.F = 0;
                         Rmess.N++;
                         SendUDPMessage();
                     }
                     break;
             }
-
         }
 
         void map()
